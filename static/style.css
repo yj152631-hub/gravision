@@ -1,0 +1,263 @@
+/* 얇고 고급스러운 영문 폰트(Cormorant, Montserrat)와 한글 폰트(Nanum Myeongjo) 로드 */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&family=Nanum+Myeongjo:wght@400;700&display=swap');
+
+:root {
+    --luxury-bg: #0a0a0a;             /* 아주 깊고 차분한 차콜 블랙 */
+    --luxury-gold: #c5a059;           /* 샴페인 골드 */
+    --luxury-gold-dim: rgba(197, 160, 89, 0.25); /* 은은한 골드 테두리용 */
+    
+    /* 폰트 변수화 (영문 폰트를 우선 적용하고 한글은 명조체로 폴백) */
+    --font-serif: 'Cormorant Garamond', 'Nanum Myeongjo', serif;
+    --font-sans: 'Montserrat', 'Nanum Myeongjo', sans-serif;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    background-color: var(--luxury-bg);
+    color: #e0e0e0;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ========================================= */
+/* 부드러운 스크롤 애니메이션 (Reveal) */
+/* ========================================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ========================================= */
+/* 얇고 클래식한 네비게이션 바 */
+/* ========================================= */
+.navbar {
+    position: fixed; 
+    top: 0; 
+    width: 100%;
+    padding: 30px 60px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid var(--luxury-gold-dim);
+    background: rgba(10, 10, 10, 0.9); /* 스크롤 시 살짝 비치도록 반투명 블랙 */
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+.nav-logo a { 
+    font-family: var(--font-serif); 
+    font-size: 1.4rem; 
+    font-weight: 300;
+    color: var(--luxury-gold); 
+    text-decoration: none; 
+    letter-spacing: 4px; 
+    text-transform: uppercase;
+}
+.nav-links a { 
+    font-family: var(--font-sans);
+    font-weight: 200;
+    color: #888; 
+    text-decoration: none; 
+    margin-left: 50px; 
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 3px; 
+    transition: color 0.4s ease; 
+}
+.nav-links a:hover { 
+    color: var(--luxury-gold); 
+}
+
+/* ========================================= */
+/* 메인 화면 (맥키선 인트로 스타일) */
+/* ========================================= */
+.intro-section {
+    height: 100vh;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    padding-top: 80px; /* 네비게이션 바 여백 */
+}
+.intro-title {
+    font-family: var(--font-serif);
+    font-size: 4.5rem;
+    color: #ffffff;
+    letter-spacing: 6px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+.intro-sub {
+    font-family: var(--font-sans);
+    font-weight: 200;
+    font-size: 0.9rem;
+    color: #888;
+    letter-spacing: 4px;
+    margin-bottom: 70px;
+    text-transform: uppercase;
+}
+
+/* ========================================= */
+/* 커다란 프론트 데스크 종 (이미지 기반) */
+/* ========================================= */
+.bell-wrapper {
+    cursor: pointer;
+    transition: transform 0.5s ease;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+.bell-wrapper:hover {
+    transform: rotate(15deg) scale(1.05); /* 고급스러운 갸우뚱 모션 */
+}
+.bell-wrapper img {
+    width: 140px; /* 요청하신 대로 종 크기를 대폭 키움 */
+    height: auto;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+}
+.ring-text {
+    margin-top: 20px;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: var(--luxury-gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* ========================================= */
+/* 설문 폼 (체크인 카드 느낌) */
+/* ========================================= */
+.step { 
+    display: none; 
+    text-align: center; 
+    animation: fadeIn 1.2s ease; 
+}
+.step.active { display: block; }
+
+.step h2 { 
+    font-family: var(--font-serif); 
+    font-size: 2.2rem; 
+    color: #fff; 
+    font-weight: 300;
+    margin-bottom: 20px; 
+    letter-spacing: 2px; 
+}
+.step p { 
+    font-family: var(--font-sans);
+    font-weight: 200;
+    margin-bottom: 50px; 
+    color: #999; 
+    font-size: 1.05rem; 
+    letter-spacing: 1px;
+}
+
+.option-grid {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    max-width: 650px; 
+    margin: 0 auto 50px auto;
+    border: 1px solid var(--luxury-gold-dim);
+}
+.option-btn {
+    background: transparent; 
+    border: none;
+    border-right: 1px solid var(--luxury-gold-dim);
+    border-bottom: 1px solid var(--luxury-gold-dim);
+    color: #aaa; 
+    padding: 35px 25px; 
+    font-family: var(--font-serif);
+    font-size: 1.2rem; 
+    font-style: italic;
+    cursor: pointer; 
+    transition: all 0.4s ease;
+}
+/* 그리드의 선들을 깔끔하게 정리 (우측 하단 테두리 겹침 방지) */
+.option-btn:nth-child(2n) { border-right: none; }
+.option-btn:nth-last-child(-n+2) { border-bottom: none; }
+
+.option-btn:hover {
+    background: rgba(197, 160, 89, 0.05); /* 배경이 확 변하지 않고 우아하게 은은한 골드빛 띔 */
+    color: var(--luxury-gold);
+}
+
+/* ========================================= */
+/* 결과 페이지 스틸컷 & 챗봇 UI */
+/* ========================================= */
+.stills-container { 
+    max-width: 1000px; 
+    margin: 0 auto 60px auto; 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; /* 간격을 넓혀서 갤러리 느낌 강조 */
+}
+.still-img { 
+    width: 100%; 
+    height: 350px; 
+    object-fit: cover; 
+    border: 1px solid var(--luxury-gold-dim); 
+    filter: grayscale(20%); /* 약간의 빈티지한 분위기 부여 */
+    transition: filter 0.5s ease, transform 0.5s ease;
+}
+.still-img:hover {
+    filter: grayscale(0%);
+    transform: translateY(-5px);
+}
+
+.concierge-chat { 
+    border: 1px solid var(--luxury-gold-dim); 
+    padding: 40px; 
+    background: linear-gradient(145deg, #121212 0%, #050505 100%);
+    max-width: 800px; 
+    margin: 0 auto; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.chat-input { 
+    background: transparent; 
+    border: none; 
+    border-bottom: 1px solid rgba(197, 160, 89, 0.5); 
+    color: #fff; 
+    width: calc(100% - 120px); 
+    padding: 15px 10px; 
+    font-family: var(--font-sans); 
+    font-weight: 300;
+    font-size: 0.95rem;
+    outline: none; 
+    transition: border-color 0.3s ease;
+}
+.chat-input:focus {
+    border-bottom: 1px solid var(--luxury-gold);
+}
+.chat-submit { 
+    background: transparent; 
+    color: var(--luxury-gold); 
+    border: 1px solid var(--luxury-gold); 
+    padding: 12px 25px; 
+    cursor: pointer; 
+    font-family: var(--font-sans);
+    font-weight: 300; 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    transition: all 0.4s ease;
+}
+.chat-submit:hover {
+    background: var(--luxury-gold);
+    color: var(--luxury-bg);
+}
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(15px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}

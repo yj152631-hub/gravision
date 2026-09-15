@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- 이 페이지 전용 예외 처리 스타일 (세로 1열 리스트 테두리 정리 및 버튼 리셋) -->
+<style>
+    #step-4 .option-grid {
+        max-width: 500px; /* 세로 리스트는 가로폭을 살짝 좁혀서 우아하게 */
+    }
+    #step-4 .option-btn {
+        border-right: none; /* 1열이므로 우측 테두리 제거 */
+    }
+    #step-4 .option-btn:not(:last-child) {
+        border-bottom: 1px solid var(--luxury-gold-dim) !important;
+    }
+    #step-4 .option-btn:last-child {
+        border-bottom: none !important;
+    }
+    
+    .submit-bell-btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+        outline: none;
+        margin-top: 20px;
+    }
+</style>
+
+<div style="width: 100%; max-width: 800px; padding: 20px; margin-top: 8vh; text-align: center;">
+    
+    <form id="checkin-form" action="/result" method="POST">
+        <!-- 선택된 값들이 저장되는 숨김 필드 -->
+        <input type="hidden" name="gender" id="val_gender">
+        <input type="hidden" name="age" id="val_age">
+        <input type="hidden" name="emotion" id="val_emotion">
+        <input type="hidden" name="time_limit" id="val_time_limit">
+        <input type="hidden" name="companion" id="val_companion">
+        <input type="hidden" name="mood" id="val_mood">
+
+        <!-- Step 1 -->
+        <div class="step active" id="step-1">
+            <h2>GUEST PROFILE</h2>
+            <p>손님의 성별을 알려주시겠습니까?</p>
+            <div class="option-grid">
+                <button type="button" class="option-btn" onclick="nextStep(1, 'gender', '여성')">여성</button>
+                <button type="button" class="option-btn" onclick="nextStep(1, 'gender', '남성')">남성</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step-2">
+            <h2>GUEST PROFILE</h2>
+            <p>연령대는 어떻게 되십니까?</p>
+            <div class="option-grid">
+                <button type="button" class="option-btn" onclick="nextStep(2, 'age', '10대')">10대</button>
+                <button type="button" class="option-btn" onclick="nextStep(2, 'age', '20대')">20대</button>
+                <button type="button" class="option-btn" onclick="nextStep(2, 'age', '30대')">30대</button>
+                <button type="button" class="option-btn" onclick="nextStep(2, 'age', '40대 이상')">40대 이상</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step-3">
+            <h2>CURRENT STATE</h2>
+            <p>오늘 호텔을 찾으신 기분은 어떠신지요?</p>
+            <div class="option-grid">
+                <button type="button" class="option-btn" onclick="nextStep(3, 'emotion', '잔잔하고 평온함')">잔잔하고 평온함</button>
+                <button type="button" class="option-btn" onclick="nextStep(3, 'emotion', '지치고 위로가 필요함')">위로가 필요함</button>
+                <button type="button" class="option-btn" onclick="nextStep(3, 'emotion', '자극이 필요함')">새로운 자극</button>
+                <button type="button" class="option-btn" onclick="nextStep(3, 'emotion', '복잡한 생각')">생각이 복잡함</button>
+            </div>
+        </div>
+
+        <!-- Step 4 (세로 1열 리스트) -->
+        <div class="step" id="step-4">
+            <h2>DURATION OF STAY</h2>
+            <p>방에 머무르실 시간은 얼마나 되십니까?</p>
+            <div class="option-grid" style="grid-template-columns: 1fr;">
+                <button type="button" class="option-btn" onclick="nextStep(4, 'time_limit', '1시간 이내')">가볍게 머물다 가기 (1시간 이내)</button>
+                <button type="button" class="option-btn" onclick="nextStep(4, 'time_limit', '약 2시간')">영화 한 편의 여유 (약 2시간)</button>
+                <button type="button" class="option-btn" onclick="nextStep(4, 'time_limit', '3시간 이상')">깊게 빠져드는 시간 (3시간 이상)</button>
+                <button type="button" class="option-btn" onclick="nextStep(4, 'time_limit', '밤새기')">시간에 구애받지 않는 긴 밤</button>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" id="step-5">
+            <h2>COMPANIONS</h2>
+            <p>이 방에 누구와 함께 들어가십니까?</p>
+            <div class="option-grid">
+                <button type="button" class="option-btn" onclick="nextStep(5, 'companion', '혼자')">저 혼자입니다</button>
+                <button type="button" class="option-btn" onclick="nextStep(5, 'companion', '연인')">연인과 함께</button>
+                <button type="button" class="option-btn" onclick="nextStep(5, 'companion', '가족')">가족과 함께</button>
+                <button type="button" class="option-btn" onclick="nextStep(5, 'companion', '친구들')">친구들과 함께</button>
+            </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step" id="step-6">
+            <h2>DESIRED EXPERIENCE</h2>
+            <p>체크아웃 하실 때, 어떤 기분이기를 원하십니까?</p>
+            <div class="option-grid">
+                <button type="button" class="option-btn" onclick="nextStep(6, 'mood', '유쾌함')">유쾌한 웃음</button>
+                <button type="button" class="option-btn" onclick="nextStep(6, 'mood', '깊은 여운')">깊은 여운</button>
+                <button type="button" class="option-btn" onclick="nextStep(6, 'mood', '긴장감')">아찔한 긴장감</button>
+                <button type="button" class="option-btn" onclick="nextStep(6, 'mood', '편안함')">모든 것을 비운 편안함</button>
+            </div>
+        </div>
+
+        <!-- Step 7 (최종 제출 폼) -->
+        <div class="step" id="step-7">
+            <h2>CHECK-IN COMPLETE</h2>
+            <p>모든 준비가 끝났습니다. 방을 배정해 드리겠습니다.</p>
+            
+            <!-- 버튼 태그 내부에 종 이미지를 넣어 폼 제출(Submit)이 되도록 처리 -->
+            <button type="submit" class="submit-bell-btn">
+                <div class="bell-wrapper">
+                    <img src="{{ url_for('static', filename='intro_bell_default.png') }}" alt="Concierge Bell">
+                    <div class="ring-text">Ring to Finalize</div>
+                </div>
+            </button>
+            
+        </div>
+    </form>
+</div>
+
+<script>
+    // 다음 스텝으로 자연스럽게 넘어가는 스크립트
+    function nextStep(currentStep, inputId, value) {
+        // 숨겨진 input 태그에 값 채우기
+        document.getElementById('val_' + inputId).value = value;
+        
+        // 현재 스텝 숨기기
+        const currentElem = document.getElementById('step-' + currentStep);
+        currentElem.classList.remove('active');
+        
+        // 다음 스텝 보여주기 (CSS에 적용된 fadeIn 애니메이션이 자동으로 작동합니다)
+        const nextElem = document.getElementById('step-' + (currentStep + 1));
+        nextElem.classList.add('active');
+    }
+</script>
+{% endblock %}

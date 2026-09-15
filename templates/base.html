@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grand Cinema Hotel</title>
+    <!-- 완성된 럭셔리 스타일 CSS 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<!-- 페이지 이동 시 부드럽게 화면이 밝아지는 페이드인 효과 적용 -->
+<body style="animation: fadeIn 1.2s ease;">
+    
+    <!-- 얇고 클래식한 상단 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <a href="/">The Grand Cinema Hotel</a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Check-in</a>
+            <a href="/trends">Guest Ledger</a>
+        </div>
+    </nav>
+    
+    <!-- 메인 콘텐츠 영역 (네비게이션 바가 넓어졌으므로 여백(padding-top)을 120px로 여유롭게 조정) -->
+    <main style="padding-top: 120px; width: 100%; display: flex; justify-content: center; min-height: 100vh;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 공통 자바스크립트: 모든 하위 페이지에서 부드러운 스크롤 애니메이션(reveal)을 사용할 수 있게 함 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealOptions = {
+                threshold: 0.15, // 요소가 화면에 15% 나타나면 실행
+                rootMargin: "0px 0px -30px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // 한 번 떠오르면 상태 유지
+                    }
+                });
+            }, revealOptions);
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+        });
+    </script>
+</body>
+</html>

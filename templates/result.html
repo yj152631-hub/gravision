@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- 이 페이지 전용 추가 스타일 (OTT 버튼 호버 및 채팅 스크롤바 정돈) -->
+<style>
+    .ott-link-btn {
+        display: inline-block;
+        border: 1px solid var(--luxury-gold-dim);
+        color: var(--luxury-gold);
+        padding: 10px 24px;
+        font-family: var(--font-sans);
+        font-weight: 300;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        margin: 5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.4s ease;
+        background: transparent;
+    }
+    .ott-link-btn:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-bg);
+        border-color: var(--luxury-gold);
+    }
+    
+    /* 채팅창 스크롤바를 얇고 고급스럽게 커스텀 */
+    #chat-box::-webkit-scrollbar {
+        width: 6px;
+    }
+    #chat-box::-webkit-scrollbar-thumb {
+        background: var(--luxury-gold-dim);
+        border-radius: 3px;
+    }
+</style>
+
+<div style="width: 100%; max-width: 1000px; margin: 0 auto; padding-top: 30px;">
+    
+    <!-- 1. 헤더 영역 (방 배정 결과) -->
+    <div class="reveal" style="text-align: center; margin-bottom: 60px;">
+        <p style="font-family: var(--font-sans); color: var(--luxury-gold); letter-spacing: 5px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px;">
+            Your Room Is Ready
+        </p>
+        
+        <h1 style="font-family: var(--font-serif); font-size: 4rem; color: #ffffff; font-weight: 300; letter-spacing: 3px;">
+            {{ rec_data.title }}
+        </h1>
+        
+        <!-- 금빛 실선 디테일 -->
+        <div style="width: 40px; height: 1px; background-color: var(--luxury-gold); margin: 30px auto;"></div>
+        
+        <!-- OTT 링크 버튼 -->
+        <div style="margin-top: 25px; display: flex; justify-content: center; flex-wrap: wrap;">
+            {% for ott in rec_data.otts %}
+                {% if ott and ott != '없음' and ott != '제공처 불명' %}
+                    <a href="https://m.kinolights.com/search?keyword={{ rec_data.title }}" target="_blank" class="ott-link-btn">
+                       {{ ott }}에서 보기 ➜
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 2. 스틸컷 갤러리 (가로 3분할) -->
+    <div class="reveal stills-container">
+        {% for still in rec_data.stills %}
+            <img src="{{ still }}" class="still-img" alt="Room View">
+        {% endfor %}
+    </div>
+
+    <!-- 3. 지배인의 메시지 및 챗봇 UI -->
+    <div class="reveal concierge-chat" style="text-align: left; margin-bottom: 100px;">
+        <h3 style="font-family: var(--font-serif); color: var(--luxury-gold); font-size: 1.8rem; margin-bottom: 20px; text-align: center; font-weight: 300; letter-spacing: 2px;">
+            From The Concierge
+        </h3>
+        
+        <!-- 지배인의 추천사를 우아한 이탤릭체 인용구 느낌으로 변경 -->
+        <p style="font-family: var(--font-serif); font-size: 1.25rem; font-style: italic; color: #ccc; line-height: 2; margin-bottom: 50px; text-align: center; font-weight: 300;">
+            "{{ rec_data.desc | safe | replace('\n', '<br>') }}"
+        </p>
+        
+        <div style="border-top: 1px solid var(--luxury-gold-dim); padding-top: 30px;">
+            <p style="font-family: var(--font-sans); font-size: 0.85rem; letter-spacing: 2px; color: #888; margin-bottom: 20px; text-transform: uppercase;">
+                지배인에게 궁금한 점이 있으십니까?
+            </p>
+            
+            <!-- 채팅 내역 출력 박스 (높이 제한 및 스크롤 추가) -->
+            <div id="chat-box" style="margin-bottom: 20px; font-family: var(--font-sans); font-weight: 300; font-size: 0.95rem; line-height: 1.7; max-height: 300px; overflow-y: auto; padding-right: 10px;"></div>
+            
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <!-- onkeypress 이벤트를 추가해 엔터키를 쳐도 메시지가 전송되도록 UX 개선 -->
+                <input type="text" id="user-input" class="chat-input" style="flex-grow: 1;" placeholder="메시지를 남겨주세요..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button class="chat-submit" onclick="sendMessage()">ASK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const text = input.value.trim();
+        if(!text) return;
+        
+        const chatBox = document.getElementById('chat-box');
+        
+        // 게스트(사용자) 메시지 UI 렌더링
+        chatBox.innerHTML += `
+            <div style="margin-bottom: 20px; color: #e0e0e0; text-align: right;">
+                <span style="color:#666; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">Guest</span><br>
+                <span style="display: inline-block; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 4px; margin-top: 5px;">${text}</span>
+            </div>`;
+            
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight; // 스크롤 맨 아래로 이동
+        
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await response.json();
+            
+            // 챗봇(지배인) 응답 UI 렌더링
+            chatBox.innerHTML += `
+                <div style="margin-bottom: 25px; color: #fff; text-align: left;">
+                    <span style="font-family: var(--font-serif); font-style: italic; color: var(--luxury-gold); font-size: 1.1rem;">The Concierge</span><br>
+                    <span style="display: inline-block; border-left: 2px solid var(--luxury-gold-dim); padding-left: 15px; margin-top: 8px; color: #aaa;">${data.reply}</span>
+                </div>`;
+                
+            chatBox.scrollTop = chatBox.scrollHeight; // 스크롤 맨 아래로 이동
+            
+        } catch(e) {
+            console.error("Chat error:", e);
+        }
+    }
+</script>
+{% endblock %}

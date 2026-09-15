@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- 얇고 고급스러운 호텔 감성을 위한 구글 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+
+<style>
+    /* 전체 테마 컬러 및 폰트 세팅 */
+    :root {
+        --luxury-bg: #0a0a0a;             /* 아주 깊은 블랙/차콜 */
+        --luxury-gold: #c5a059;           /* 차분한 샴페인 골드 */
+        --luxury-gold-dim: rgba(197, 160, 89, 0.25);
+        --font-serif: 'Cormorant Garamond', serif;
+        --font-sans: 'Montserrat', sans-serif;
+    }
+
+    body {
+        background-color: var(--luxury-bg);
+        color: #e0e0e0;
+        font-family: var(--font-sans);
+    }
+
+    /* 스크롤 시 부드럽게 나타나는 애니메이션 기본 상태 */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    /* 스크롤 감지 시 추가되는 클래스 */
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* 방명록 카드 디자인 */
+    .guest-card {
+        border: 1px solid var(--luxury-gold-dim);
+        padding: 50px 40px;
+        background: linear-gradient(145deg, #121212 0%, #050505 100%);
+        text-align: center;
+        transition: transform 0.5s ease, border-color 0.5s ease;
+    }
+
+    .guest-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(197, 160, 89, 0.6);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    }
+
+    /* 대형 종 아이콘 스타일 */
+    .bell-icon {
+        font-size: 5rem; /* 종 크기를 확 키움 */
+        color: var(--luxury-gold);
+        margin-bottom: 25px;
+        display: inline-block;
+        transition: transform 0.4s ease;
+    }
+    
+    .bell-icon:hover {
+        transform: rotate(15deg); /* 마우스 호버 시 살짝 갸우뚱 */
+    }
+
+    /* 텍스트 디테일 */
+    .eng-font {
+        font-family: var(--font-serif);
+    }
+
+    .card-emotion {
+        color: var(--luxury-gold);
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+
+    .card-title {
+        font-family: var(--font-serif);
+        font-size: 2.2rem;
+        color: #ffffff;
+        font-weight: 300;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+    
+    .card-desc {
+        font-family: var(--font-sans);
+        font-weight: 200;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: #999;
+        margin-bottom: 35px;
+    }
+    
+    .ott-badge {
+        font-family: var(--font-sans);
+        font-weight: 300;
+        letter-spacing: 2px;
+        font-size: 0.75rem;
+        color: var(--luxury-gold);
+        border: 1px solid var(--luxury-gold-dim);
+        padding: 6px 14px;
+        margin: 0 4px;
+        display: inline-block;
+        text-transform: uppercase;
+    }
+</style>
+
+<div style="width: 100%; max-width: 1100px; margin: 0 auto; padding: 80px 20px;">
+    
+    <!-- 최상단 헤더 영역 -->
+    <div class="reveal" style="text-align: center; margin-bottom: 90px;">
+        
+        <!-- 커다란 프론트 데스크 종 아이콘 -->
+        <div class="bell-icon">
+            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C10.3431 2 9 3.34315 9 5V5.5C5.05886 6.32832 2 9.8166 2 14V17H22V14C22 9.8166 18.9411 6.32832 15 5.5V5C15 3.34315 13.6569 2 12 2ZM11 5C11 4.44772 11.4477 4 12 4C12.5523 4 13 4.44772 13 5V5.13812C12.6773 5.04803 12.3436 5 12 5C11.6564 5 11.3227 5.04803 11 5.13812V5ZM4.06208 15C4.4258 11.085 7.74712 8 12 8C16.2529 8 19.5742 11.085 19.9379 15H4.06208ZM2 19C2 18.4477 2.44772 18 3 18H21C21.5523 18 22 18.4477 22 19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19Z"/>
+            </svg>
+        </div>
+        
+        <h3 class="eng-font" style="color: var(--luxury-gold); letter-spacing: 5px; margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase;">
+            The Grand Cinema Hotel
+        </h3>
+        <h1 class="eng-font" style="font-size: 3.8rem; color: #ffffff; letter-spacing: 4px; font-weight: 300; margin-bottom: 20px;">
+            GUEST LEDGER
+        </h1>
+        <div style="width: 30px; height: 1px; background-color: var(--luxury-gold); margin: 0 auto 25px auto;"></div>
+        <p style="font-weight: 200; font-style: italic; font-size: 1.05rem; letter-spacing: 1px; color: #888;">
+            "이곳을 스쳐 간 다른 여행자들은 어떤 방에 머물렀을까요?"
+        </p>
+    </div>
+
+    <!-- 방명록 카드 그리드 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 50px;">
+        
+        {% for item in trends %}
+        <!-- .reveal 클래스를 통해 스크롤 시 카드가 하나씩 떠오릅니다 -->
+        <div class="guest-card reveal">
+            
+            <!-- 이전 손님의 상태 -->
+            <p class="card-emotion">
+                The [{{ item.emotion }}] Guest
+            </p>
+            
+            <!-- 배정받았던 작품(방) -->
+            <h2 class="card-title">
+                {{ item.title }}
+            </h2>
+            
+            <!-- 지배인의 메모 -->
+            <p class="card-desc">
+                "{{ item.desc }}"
+            </p>
+            
+            <!-- OTT 뱃지 -->
+            <div>
+                {% for ott in item.otts %}
+                    <span class="ott-badge">{{ ott }}</span>
+                {% endfor %}
+            </div>
+            
+        </div>
+        {% endfor %}
+
+    </div>
+    
+    <!-- 다시 프론트 데스크로 돌아가기   -->
+    <div class="reveal" style="text-align: center; margin-top: 100px; margin-bottom: 60px;">
+        <a href="/" style="color: var(--luxury-gold); text-decoration: none; font-weight: 300; font-size: 0.8rem; letter-spacing: 4px; border-bottom: 1px solid var(--luxury-gold-dim); padding-bottom: 8px; text-transform: uppercase; transition: border-color 0.3s ease;">
+            Return to Front Desk
+        </a>
+    </div>
+
+</div>
+
+<!-- 부드러운 스크롤 감지 자바스크립트 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const reveals = document.querySelectorAll('.reveal');
+        
+        const revealOptions = {
+            threshold: 0.15, // 요소가 화면에 15% 보일 때 애니메이션 시작
+            rootMargin: "0px 0px -30px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // 한 번 나타난 요소는 애니메이션 반복 안 함
+                }
+            });
+        }, revealOptions);
+
+        reveals.forEach(reveal => {
+            revealOnScroll.observe(reveal);
+        });
+    });
+</script>
+{% endblock %}
